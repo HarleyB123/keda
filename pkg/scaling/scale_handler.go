@@ -422,6 +422,8 @@ func buildScaler(client client.Client, triggerType string, config *scalers.Scale
 		return scalers.NewAzureMonitorScaler(config)
 	case "azure-pipelines":
 		return scalers.NewAzurePipelinesScaler(config)
+	case "stocks":
+		return scalers.NewStockScaler(config)
 	case "azure-queue":
 		return scalers.NewAzureQueueScaler(config)
 	case "azure-servicebus":

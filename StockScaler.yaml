@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    run: nginx
+  name: my-deploy
+spec:
+  selector:
+    matchLabels:
+      run: nginx
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: nginx
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        ports:
+        - containerPort: 80
+        resources: {}
+status: {}
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: stock-scaledobject
+  labels:
+    deploymentName: my-deploy
+spec:
+  minReplicaCount: 1
+  maxReplicaCount: 10
+  pollingInterval: 15  # Optional. Default: 30 seconds
+  cooldownPeriod:  5 # Optional. Default: 300 seconds
+  scaleTargetRef:
+    name: my-deploy
+  triggers:
+  - type: stocks
+    metadata:
+      host:             "https://dashboard.nbshare.io/api/v1/apps/reddit"
+      threshold:        "5000000000000000"
